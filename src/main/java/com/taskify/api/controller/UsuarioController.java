@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -17,42 +18,17 @@ import com.taskify.api.model.Usuario;
 import com.taskify.api.repository.UsuarioRepository;
 
 @RestController
+@RequestMapping(value = "/usuarios")
 public class UsuarioController {
 
 
-    @PostMapping("/usuarios")
+    @PostMapping
     public Usuario cadastrarUsuario(@RequestBody Usuario usuario){
         return usuarioRepository.save(usuario);
 
     }
-
-    @GetMapping("/usuarios")
-    public List<Usuario> ListarUsuarios(){
-        return usuarioRepository.findAll();
-    }
-
-    @GetMapping("/usuarios/{id}")
-    public Optional <Usuario> obterUsuarioPeloId(@PathVariable("id") Long id){
-        return usuarioRepository.findById(id);
-    }
-
-    @DeleteMapping("/usuarios/{id}")
-    public void deletarUsuarioPeloId(@PathVariable("id") Long id){
-        usuarioRepository.deleteById(id);
-    }
-
-    @GetMapping("/email/{email}")
-    public Optional<Usuario> obterUsuarioPeloEmail(@PathVariable("email") String email){
-        return usuarioRepository.findByEmail(email);
-    }
-
-    @GetMapping("/nome/{nome}")
-    public Optional<List<Usuario>> obterUsuarioPeloNome(@PathVariable("nome") String nome){
-        return usuarioRepository.findByNome(nome);
-    }
     
-
-    @PutMapping("/usuarios/{id}")
+    @PutMapping("/{id}")
     public Usuario atualizarUsuario(@PathVariable("id") Long id, @RequestBody Usuario usuario) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findById(id);
         
@@ -71,6 +47,31 @@ public class UsuarioController {
         return null;
     }
 
+    @GetMapping
+    public List<Usuario> ListarUsuarios(){
+        return usuarioRepository.findAll();
+    }
+
+
+    @GetMapping("/{id}")
+    public Optional <Usuario> obterUsuarioPeloId(@PathVariable("id") Long id){
+        return usuarioRepository.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarUsuarioPeloId(@PathVariable("id") Long id){
+        usuarioRepository.deleteById(id);
+    }
+
+    @GetMapping("/email/{email}")
+    public Optional<Usuario> obterUsuarioPeloEmail(@PathVariable("email") String email){
+        return usuarioRepository.findByEmail(email);
+    }
+
+    @GetMapping("/nome/{nome}")
+    public Optional<List<Usuario>> obterUsuarioPeloNome(@PathVariable("nome") String nome){
+        return usuarioRepository.findByNome(nome);
+    }
 
     @Autowired
     private UsuarioRepository usuarioRepository;
