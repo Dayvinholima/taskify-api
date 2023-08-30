@@ -10,9 +10,9 @@ import com.taskify.api.model.Tarefa;
 
 public interface TarefaRepository extends JpaRepository<Tarefa, Long>  {
     
-    @Query("SELECT p FROM tb_tarefas p WHERE p.projeto.idProjeto = : idProjeto")
+    @Query("SELECT p FROM tb_tarefas p WHERE p.projeto.idProjeto = : idProjeto")//pegando pelo id do projeto
     Optional<List<Tarefa>> findByProjeto(Long projeto);
 
-    @Query("SELECT t FROM tb_tarefas t WHERE t.usuario.idUsuario = : idUsuario")
+    @Query("SELECT t FROM tb_tarefas t WHERE t.usuario.idUsuario = : idUsuario") //pegando pelo id dousuario
     Optional<List<Tarefa>> findByUsuario(Long usuario);
 }

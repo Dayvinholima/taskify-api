@@ -70,7 +70,7 @@ public class TarefaController {
     public Optional<List<Tarefa>> ObterTarefasDeUmProjeto(@PathVariable("id") Long IdProjeto){
         return tarefaRepository.findByProjeto(IdProjeto);
     }
-
+    
     @Autowired
     private TarefaRepository tarefaRepository;
     
