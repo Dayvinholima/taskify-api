@@ -1,9 +1,10 @@
 package com.taskify.api.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,51 +22,53 @@ import com.taskify.api.repository.ProjetoRepository;
 @RequestMapping(value = "/projetos")
 public class ProjetoController {
 
-
     @PostMapping
-    public @ResponseBody Projeto cadastrarProgeto(@RequestBody Projeto projeto){
+    public @ResponseBody Projeto cadastrarProjeto(@RequestBody Projeto projeto) {
         return projetoRepository.save(projeto);
     }
 
-    @PutMapping ("/{id}")
-    public Projeto atualizaProjeto(@PathVariable("id")Long id, @RequestBody Projeto projeto){
-        Optional<Projeto> projetoExistente = projetoRepository.findById(id);
-
-        if( projetoExistente.isPresent()){
-            Projeto projetoObj = projetoExistente.get();
-
-            projetoObj.setNome(projeto.getNome());
-            projetoObj.setDecricao(projeto.getDecricao());
-            projetoObj.setUsuario(projeto.getUsuario());
-
-        return projetoRepository.save(projetoObj);
-
-        }
-        return null;
-    }
-
     @GetMapping
-    public List<Projeto> listarProjetos(){
-        return projetoRepository.findAll();
+    public Page<Projeto> listarProjetos(Pageable pageable) {
+        return projetoRepository.findAll(pageable);
     }
-    
+
     @GetMapping("/{id}")
-    public Optional <Projeto> obterProjetoPeloId(@PathVariable("id") Long id){
-        return projetoRepository.findById(id);
-    }
-    @DeleteMapping("/{id}")
-    public void deletarProjetoPeloId(@PathVariable("id") Long id){
-        projetoRepository.deleteById(id);
+    public Optional<Projeto> obterProjetoPeloId(@PathVariable("id") Long idProjeto) {
+        return projetoRepository.findById(idProjeto);
+    } 
     
+    @DeleteMapping("/{id}")
+    public void deletarProjeto(@PathVariable("id") Long idProjeto) {
+        projetoRepository.deleteById(idProjeto);
     }
+
+    @PutMapping("/{id}")
+    public Projeto atualizarProjeto(
+        @PathVariable("id") Long idProjeto, 
+        @RequestBody Projeto projeto) {
+
+            Optional<Projeto> projetoExistente = projetoRepository.findById(idProjeto);
+
+            if (projetoExistente.isPresent()) {
+                // atualizar os campos
+                Projeto projetoObj = projetoExistente.get();
+
+                projetoObj.setNome(projeto.getNome());
+                projetoObj.setDescricao(projeto.getDescricao());
+                projetoObj.setUsuario(projeto.getUsuario());
+
+                return projetoRepository.save(projetoObj);
+            }
+
+            return null;
+        }
 
     @GetMapping("/usuario/{id}")
-    public Optional<List<Projeto>> obterProjetosDeUmUsuario(@PathVariable("id")Long IdUsuario) {
-        return projetoRepository.findByUsuario(IdUsuario);
+    public Optional<Page<Projeto>> obterProjetosDeUmUsuario(@PathVariable("id") Long idUsuario, Pageable pageable) {
+        return projetoRepository.findByUsuario(idUsuario, pageable);
     }
-
 
     @Autowired
     private ProjetoRepository projetoRepository;
-    
+
 }

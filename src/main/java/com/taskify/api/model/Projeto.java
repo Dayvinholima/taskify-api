@@ -25,13 +25,10 @@ public class Projeto {
     private String nome;
 
     @Column(columnDefinition = "TEXT")
-    private String decricao;
+    private String descricao;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
-
-    
-    
 }
